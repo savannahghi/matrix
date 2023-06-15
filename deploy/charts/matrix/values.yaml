@@ -1,0 +1,167 @@
+# Default values for matrix.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+app:
+  container:
+    env:
+      googleApplicationCredentialsSecret:
+        name: "matrix-service-account"
+        filePath: "/secrets/gcp/key.json"
+        mountPath: "/secrets/gcp"
+
+# Synapse Kubernetes resource settings
+synapse:
+  configmountpath: "/data/homeserver.yaml"
+  configSecretName: "homeserver-config"
+  logMountPath: "/data/log.yaml"
+  port: 8008
+  image:
+    repository: "matrixdotorg/synapse"
+    tag: latest
+    pullPolicy: Always
+  service:
+    type: ClusterIP
+    port: 80
+    federation:
+      type: ClusterIP
+      port: 80
+  replicaCount: 1
+  resources: {}
+  # Configure timings for readiness, startup, and liveness probes here
+  probes:
+    readiness:
+      timeoutSeconds: 5
+      periodSeconds: 10
+    startup:
+      timeoutSeconds: 5
+      periodSeconds: 5
+      failureThreshold: 6
+    liveness:
+      timeoutSeconds: 5
+      periodSeconds: 10
+
+  # Labels to be appended to all Synapse resources
+  labels:
+    component: synapse
+
+  # Prometheus metrics for Synapse
+  # https://github.com/matrix-org/synapse/blob/master/docs/metrics-howto.md
+  metrics:
+    # Whether Synapse should capture metrics on an additional endpoint
+    enabled: true
+    # Port to listen on for metrics scraping
+    port: 9092
+    annotations: true
+
+riot:
+  configmountpath: "/app/config.json"
+  configSecretName: "element-config"
+  port: 8080
+  serviceName: "riot"
+  # Set to false to disable a deployment of Element. Users will still be able to connect via any other instances of Element (such as https://app.element.io), Element Desktop, or any other Matrix clients
+  enabled: true
+
+  # Organization/enterprise branding
+  branding:
+    # Shown in email notifications
+    brand: "Element"
+    # Background of login splash screen
+    welcomeBackgroundUrl: ""
+    # Logo shown at top of login screen
+    authHeaderLogoUrl: ""
+    # Array of links to show at the bottom of the login screen
+    authFooterLinks: []
+  #      - text:
+  #        url:
+
+  # Element integrations configuration
+  integrations:
+    # Set to false to disable the Integrations menu (including widgets, bots, and other plugins to Element)
+    enabled: true
+    # UI to load when a user selects the Integrations button at the top-right of a room
+    ui: "https://scalar.vector.im/"
+    # API for the integration server
+    api: "https://scalar.vector.im/api"
+    # Array of API paths providing widgets
+    widgets:
+      - "https://scalar.vector.im/_matrix/integrations/v1"
+      - "https://scalar.vector.im/api"
+      - "https://scalar-staging.vector.im/_matrix/integrations/v1"
+      - "https://scalar-staging.vector.im/api"
+      - "https://scalar-staging.riot.im/scalar/api"
+
+  # Experimental features in Element, see https://github.com/vector-im/riot-web/blob/develop/docs/labs.md
+  labs:
+    - feature_new_spinner
+    - feature_pinning
+    - feature_custom_status
+    - feature_custom_tags
+    - feature_state_counters
+    - feature_many_integration_managers
+    - feature_mjolnir
+    - feature_dm_verification
+    - feature_bridge_state
+    - feature_presence_in_room_list
+    - feature_custom_themes
+
+  # Servers to show in the Explore menu (the current server is always shown)
+  roomDirectoryServers:
+    - matrix.org
+
+  # Set to the user ID (@username:domain.tld) of a bot to invite all new users to a DM with the bot upon registration
+  welcomeUserId: ""
+
+  # Prefix before permalinks generated when users share links to rooms, users, or messages. If running an unfederated Synapse, set the below to the URL of your Element instance.
+  permalinkPrefix: "https://matrix.to"
+
+  # Element Kubernetes resource settings
+  image:
+    repository: "vectorim/element-web"
+    tag: latest
+    pullPolicy: Always
+
+  service:
+    type: NodePort
+    port: 80
+  replicaCount: 1
+  resources: {}
+  probes:
+    readiness: {}
+    startup: {}
+    liveness: {}
+
+  # Element specific labels
+  labels:
+    component: element
+
+service:
+  type: NodePort
+  port: 80
+
+ingress:
+  enabled: true
+  className: "kong"
+  annotations:
+    kubernetes.io/tls-acme: "true"
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    konghq.com/protocols: "https"
+    konghq.com/https-redirect-status-code: "308"
+  hosts:
+    - host: ""
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80

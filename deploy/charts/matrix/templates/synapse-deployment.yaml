@@ -1,0 +1,91 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "matrix.fullname" . }}
+  labels:
+    {{- include "matrix.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "matrix.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "matrix.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        fsGroup: 666
+        runAsGroup: 666
+        runAsUser: 666
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.synapse.image.repository }}:{{ .Values.synapse.image.tag }}"
+          imagePullPolicy: {{ .Values.synapse.image.pullPolicy }}
+          securityContext:
+            runAsNonRoot: false
+          ports:
+            - name: http
+              containerPort: {{ .Values.synapse.port }}
+              protocol: TCP
+              
+            {{- if .Values.synapse.metrics.enabled }}
+            - name: metrics
+              containerPort: {{ .Values.synapse.metrics.port }}
+              protocol: TCP
+            {{- end }}
+          
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+
+          volumeMounts:
+          - name: {{ .Values.synapse.configSecretName }}
+            mountPath: {{ .Values.synapse.configmountpath }}
+            subPath: homeserver.yaml
+          
+          - name: log
+            mountPath: {{ .Values.synapse.logMountPath }}
+            subPath: log.yaml
+
+          - mountPath: /synapse/data
+            name: matrix-synapse-data
+          
+        - name: cloudsql-proxy
+          image: gcr.io/cloud-sql-connectors/cloud-sql-proxy:2.1.0
+          args:
+            - "--port=5432"
+            - "{{ .Values.app.container.env.databaseInstanceConnectionName }}"
+            - "--credentials-file={{ .Values.app.container.env.googleApplicationCredentialsSecret.filePath }}"
+          securityContext:
+            runAsNonRoot: true
+
+          volumeMounts:
+          - name: {{ .Values.app.container.env.googleApplicationCredentialsSecret.name }}
+            mountPath: {{ .Values.app.container.env.googleApplicationCredentialsSecret.mountPath }}
+            readOnly: true
+          
+      volumes:
+      - name: matrix-synapse-data
+        emptyDir: {}
+      
+      - name: log
+        configMap:
+          name: {{ .Values.synapse.configSecretName }}
+
+      - name: {{ .Values.synapse.configSecretName }}
+        configMap:
+          name: {{ .Values.synapse.configSecretName }}
+    
+      - name: {{ .Values.app.container.env.googleApplicationCredentialsSecret.name }}
+        secret:
+          secretName: {{ .Values.app.container.env.googleApplicationCredentialsSecret.name }}

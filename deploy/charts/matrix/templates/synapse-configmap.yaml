@@ -1,0 +1,236 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.synapse.configSecretName }}
+data:
+  log.yaml: |
+    version: 1
+    formatters:
+      precise:
+        format: '%(asctime)s - %(name)s - %(lineno)d - %(levelname)s - %(request)s- %(message)s'
+    filters:
+      context:
+        (): synapse.util.logcontext.LoggingContextFilter
+        request: ""
+    handlers:
+      console:
+        class: logging.StreamHandler
+        formatter: precise
+        filters: [context]
+        level: "INFO"
+    loggers:
+        synapse:
+          level: "INFO"
+    root:
+        level: "INFO"
+        handlers: [console]
+
+  homeserver.yaml: |
+    account_threepid_delegates:
+      msisdn: ""
+    alias_creation_rules:
+      - action: allow
+        alias: "*"
+        room_id: "*"
+        user_id: "*"
+    allow_guest_access: false
+    allow_public_rooms_over_federation: false
+    allow_public_rooms_without_auth: false
+    app_service_config_files: []
+    autocreate_auto_join_rooms: true
+    background_updates: null
+    database:
+      args:
+        cp_max: 10
+        cp_min: 5
+        database: matrix-synapse
+        host: localhost
+        password: mycarehub_django
+        port: 5432
+        user: mycarehub_django
+      name: psycopg2
+      txn_limit: 0
+    caches:
+      global_factor: 0.5
+      per_cache_factors: null
+    cas_config: null
+    default_room_version: "10"
+    email:
+      app_name: Matrix
+      client_base_url: https://riot.test.savannahghi.org
+      enable_notifs: true
+      invite_client_location: https://app.element.io
+      notif_for_new_users: true
+      notif_from: Matrix <matrix@prohealth360.org>
+      require_transport_security: false
+      smtp_host: matrix-mailer
+      smtp_port: 8025
+    enable_media_repo: true
+    enable_metrics: false
+    enable_registration: true
+    enable_registration_captcha: false
+    enable_registration_without_verification: true
+    enable_room_list_search: true
+    encryption_enabled_by_default_for_room_type: "off"
+    event_cache_size: 100K
+    federation_rr_transactions_per_room_per_second: 50
+    include_profile_data_on_invite: true
+    instance_map: {}
+    limit_profile_requests_to_users_who_share_rooms: false
+    limit_remote_rooms: null
+    listeners:
+      - bind_addresses:
+          - "::"
+        port: 8008
+        resources:
+          - compress: false
+            names:
+              - client
+        tls: false
+        type: http
+        x_forwarded: true
+      - bind_addresses:
+          - "::"
+        port: 8048
+        resources:
+          - compress: false
+            names:
+              - federation
+        tls: false
+        type: http
+        x_forwarded: true
+    log_config: /data/log.yaml
+    manhole_settings: null
+    max_spider_size: 10M
+    max_upload_size: 50M
+    media_retention: null
+    media_storage_providers: []
+    media_store_path: /synapse/data/matrix-media-store-parent/media-store
+    metrics_flags: null
+    modules: []
+    oembed: null
+    oidc_providers: null
+    old_signing_keys: null
+    opentracing: null
+    password_config:
+      enabled: true
+      localdb_enabled: true
+      pepper: ""
+      policy: null
+    pid_file: /homeserver.pid
+    presence:
+      enabled: true
+    public_baseurl: https://matrix.test.savannahghi.org/
+    push:
+      include_content: true
+    rc_admin_redaction:
+      burst_count: 50
+      per_second: 1
+    rc_federation:
+      concurrent: 3
+      reject_limit: 50
+      sleep_delay: 500
+      sleep_limit: 10
+      window_size: 1000
+    rc_invites:
+      per_issuer:
+        burst_count: 10
+        per_second: 0.3
+      per_room:
+        burst_count: 10
+        per_second: 0.3
+      per_user:
+        burst_count: 5
+        per_second: 0.003
+    rc_joins:
+      local:
+        burst_count: 10
+        per_second: 0.1
+      remote:
+        burst_count: 10
+        per_second: 0.01
+    rc_login:
+      account:
+        burst_count: 1000
+        per_second: 10000
+      address:
+        burst_count: 1000
+        per_second: 10000
+      failed_attempts:
+        burst_count: 1000
+        per_second: 10000
+    rc_message:
+      burst_count: 10
+      per_second: 0.2
+    rc_registration:
+      burst_count: 3
+      per_second: 0.17
+    recaptcha_private_key: ""
+    recaptcha_public_key: ""
+    redaction_retention_period: 7d
+    redis:
+      enabled: false
+      host: null
+      password: null
+      port: 6379
+    registration_requires_token: true
+    registration_shared_secret: bc1fb30f-88c0-5f7f-a646-c368fb6af6dd
+    report_stats: false
+    require_auth_for_profile_requests: false
+    retention: null
+    room_list_publication_rules:
+      - action: allow
+        alias: "*"
+        room_id: "*"
+        user_id: "*"
+    room_prejoin_state: null
+    saml2_config:
+      sp_config: null
+      user_mapping_provider:
+        config: null
+    server_name: savannahghi.org
+    signing_key_path: /synapse/data/matrix.test.savannahghi.org.signing.key
+    spam_checker: []
+    sso: null
+    stats: null
+    stream_writers: {}
+    templates: null
+    tls_certificate_path: null
+    tls_private_key_path: null
+    trusted_key_servers:
+      - server_name: matrix.org
+    turn_allow_guests: false
+    turn_shared_secret: 10ff9e2b-0dce-5cd2-b6c3-f5eda0398760
+    turn_uris:
+      - turn:matrix.test.savannahghi.org?transport=udp
+      - turn:matrix.test.savannahghi.org?transport=tcp
+    ui_auth: null
+    url_preview_accept_language:
+      - en-US
+      - en
+    url_preview_enabled: true
+    url_preview_ip_range_blacklist:
+      - 127.0.0.0/8
+      - 10.0.0.0/8
+      - 172.16.0.0/12
+      - 192.168.0.0/16
+      - 100.64.0.0/10
+      - 192.0.0.0/24
+      - 169.254.0.0/16
+      - 192.88.99.0/24
+      - 198.18.0.0/15
+      - 192.0.2.0/24
+      - 198.51.100.0/24
+      - 203.0.113.0/24
+      - 224.0.0.0/4
+      - ::1/128
+      - fe80::/10
+      - fc00::/7
+      - 2001:db8::/32
+      - ff00::/8
+      - fec0::/10
+    user_directory:
+      enabled: true
+      prefer_local_users: true
+      search_all_users: true
+    user_ips_max_age: 28d
