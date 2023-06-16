@@ -1,0 +1,43 @@
+{{- if .Values.ingress.enabled -}}
+{{- $svcPort := .Values.riot.port -}}
+{{- if and .Values.ingress.className (not (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion)) }}
+  {{- if not (hasKey .Values.ingress.annotations "kubernetes.io/ingress.class") }}
+  {{- $_ := set .Values.ingress.annotations "kubernetes.io/ingress.class" .Values.ingress.className}}
+  {{- end }}
+{{- end }}
+{{- if semverCompare ">=1.19-0" .Capabilities.KubeVersion.GitVersion -}}
+apiVersion: networking.k8s.io/v1
+{{- else if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion -}}
+apiVersion: networking.k8s.io/v1beta1
+{{- else -}}
+apiVersion: extensions/v1beta1
+{{- end }}
+kind: Ingress
+metadata:
+  name: riot
+  labels:
+    {{- include "matrix.labels" . | nindent 4 }}
+  {{- with .Values.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  ingressClassName: kong
+  tls:
+    - hosts:
+        - {{ .Values.networking.riot.ingress.host }}
+      secretName: tls-letsencrypt-riot
+  rules:
+    - host: {{ .Values.networking.riot.ingress.host }}
+      http:
+        paths:
+          - path: "/"
+            pathType: "Prefix"
+            backend:
+              service:
+                name: {{ .Values.riot.serviceName }}
+                port:
+                  number: {{ $svcPort }}
+                  
+{{- end }}
+  
