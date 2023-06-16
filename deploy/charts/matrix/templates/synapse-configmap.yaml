@@ -173,7 +173,7 @@ data:
       host: null
       password: null
       port: 6379
-    registration_requires_token: true
+    registration_requires_token: false
     registration_shared_secret: bc1fb30f-88c0-5f7f-a646-c368fb6af6dd
     report_stats: false
     require_auth_for_profile_requests: false
