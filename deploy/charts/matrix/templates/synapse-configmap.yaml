@@ -57,7 +57,7 @@ data:
     default_room_version: "10"
     email:
       app_name: Matrix
-      client_base_url: https://riot.test.savannahghi.org
+      client_base_url: https://element.prohealth360.org
       enable_notifs: true
       invite_client_location: https://app.element.io
       notif_for_new_users: true
@@ -120,7 +120,7 @@ data:
     pid_file: /homeserver.pid
     presence:
       enabled: true
-    public_baseurl: https://matrix.test.savannahghi.org/
+    public_baseurl: https://matrix.prohealth360.org/
     push:
       include_content: true
     rc_admin_redaction:
@@ -188,8 +188,8 @@ data:
       sp_config: null
       user_mapping_provider:
         config: null
-    server_name: savannahghi.org
-    signing_key_path: /synapse/data/matrix.test.savannahghi.org.signing.key
+    server_name: prohealth360.org
+    signing_key_path: /synapse/data/matrix.prohealth360.org.signing.key
     spam_checker: []
     sso: null
     stats: null
@@ -202,8 +202,8 @@ data:
     turn_allow_guests: false
     turn_shared_secret: 10ff9e2b-0dce-5cd2-b6c3-f5eda0398760
     turn_uris:
-      - turn:matrix.test.savannahghi.org?transport=udp
-      - turn:matrix.test.savannahghi.org?transport=tcp
+      - turn:matrix.prohealth360.org?transport=udp
+      - turn:matrix.prohealth360.org?transport=tcp
     ui_auth: null
     url_preview_accept_language:
       - en-US
