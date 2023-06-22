@@ -43,7 +43,7 @@ data:
       args:
         cp_max: 10
         cp_min: 5
-        database: matrix-synapse
+        database: matrix_synapse_testing
         host: localhost
         password: mycarehub_django
         port: 5432
@@ -57,7 +57,7 @@ data:
     default_room_version: "10"
     email:
       app_name: Matrix
-      client_base_url: https://riot.test.savannahghi.org
+      client_base_url: https://element.test.savannahghi.org
       enable_notifs: true
       invite_client_location: https://app.element.io
       notif_for_new_users: true
@@ -188,7 +188,7 @@ data:
       sp_config: null
       user_mapping_provider:
         config: null
-    server_name: savannahghi.org
+    server_name: prohealth360.org
     signing_key_path: /synapse/data/matrix.test.savannahghi.org.signing.key
     spam_checker: []
     sso: null
