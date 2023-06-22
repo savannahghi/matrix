@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: riot
+  name: element
   labels:
     {{- include "matrix.labels" . | nindent 4 }}
 spec:
@@ -29,30 +29,30 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: riot
+        - name: element
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.riot.image.repository }}:{{ .Values.riot.image.tag }}"
-          imagePullPolicy: {{ .Values.riot.image.pullPolicy }}
+          image: "{{ .Values.element.image.repository }}:{{ .Values.element.image.tag }}"
+          imagePullPolicy: {{ .Values.element.image.pullPolicy }}
           ports:
             - name: http
-              containerPort: {{ .Values.riot.port }}
+              containerPort: {{ .Values.element.port }}
               protocol: TCP
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
 
           volumeMounts:
-          - name: {{ .Values.riot.configSecretName }}
-            mountPath: {{ .Values.riot.configmountpath }}
+          - name: {{ .Values.element.configSecretName }}
+            mountPath: {{ .Values.element.configmountpath }}
             subPath: config.json
 
           - mountPath: /etc/nginx/conf.d
             name: config-nginx
           
       volumes:
-      - name: {{ .Values.riot.configSecretName }}
+      - name: {{ .Values.element.configSecretName }}
         configMap:
-          name: {{ .Values.riot.configSecretName }}
+          name: {{ .Values.element.configSecretName }}
       
       - name: config-nginx
         configMap:

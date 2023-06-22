@@ -56,11 +56,11 @@ synapse:
     port: 9092
     annotations: true
 
-riot:
+element:
   configmountpath: "/app/config.json"
   configSecretName: "element-config"
   port: 8080
-  serviceName: "riot"
+  serviceName: "element"
   # Set to false to disable a deployment of Element. Users will still be able to connect via any other instances of Element (such as https://app.element.io), Element Desktop, or any other Matrix clients
   enabled: true
 
