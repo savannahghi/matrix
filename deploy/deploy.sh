@@ -24,7 +24,7 @@ helm upgrade \
     --set networking.issuer.name="letsencrypt-prod"\
     --set networking.issuer.privateKeySecretRef="letsencrypt-prod"\
     --set networking.synapse.ingress.host="${SYNAPSE_DOMAIN}"\
-    --set networking.riot.ingress.host="${ELEMENT_DOMAIN}"\
+    --set networking.element.ingress.host="${ELEMENT_DOMAIN}"\
     --set app.container.env.databaseInstanceConnectionName="${DATABASE_INSTANCE_CONNECTION_NAME}"\
     --wait \
     --timeout 300s \

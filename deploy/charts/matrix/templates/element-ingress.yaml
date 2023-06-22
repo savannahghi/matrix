@@ -1,5 +1,5 @@
 {{- if .Values.ingress.enabled -}}
-{{- $svcPort := .Values.riot.port -}}
+{{- $svcPort := .Values.element.port -}}
 {{- if and .Values.ingress.className (not (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion)) }}
   {{- if not (hasKey .Values.ingress.annotations "kubernetes.io/ingress.class") }}
   {{- $_ := set .Values.ingress.annotations "kubernetes.io/ingress.class" .Values.ingress.className}}
@@ -14,28 +14,27 @@ apiVersion: extensions/v1beta1
 {{- end }}
 kind: Ingress
 metadata:
-  name: riot
+  name: element
   labels:
     {{- include "matrix.labels" . | nindent 4 }}
-  {{- with .Values.ingress.annotations }}
   annotations:
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
+    kubernetes.io/tls-acme: "true"
+    cert-manager.io/cluster-issuer: letsencrypt-prod
 spec:
   ingressClassName: nginx
   tls:
     - hosts:
-        - {{ .Values.networking.riot.ingress.host }}
-      secretName: tls-letsencrypt-riot
+        - {{ .Values.networking.element.ingress.host }}
+      secretName: tls-letsencrypt-element
   rules:
-    - host: {{ .Values.networking.riot.ingress.host }}
+    - host: {{ .Values.networking.element.ingress.host }}
       http:
         paths:
           - path: "/"
             pathType: "Prefix"
             backend:
               service:
-                name: {{ .Values.riot.serviceName }}
+                name: {{ .Values.element.serviceName }}
                 port:
                   number: {{ $svcPort }}
                   

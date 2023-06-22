@@ -1,14 +1,14 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Values.riot.serviceName }}
+  name: {{ .Values.element.serviceName }}
   labels:
     {{- include "matrix.labels" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:
-    - port: {{ .Values.riot.port }}
-      targetPort: {{ .Values.riot.port }}
+    - port: {{ .Values.element.port }}
+      targetPort: {{ .Values.element.port }}
       protocol: TCP
       name: http
   selector:
