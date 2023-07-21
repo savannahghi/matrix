@@ -23,6 +23,7 @@ jobs:
   deploy_to_testing:
     name: Deploy testing matrix server to GKE
     runs-on: ubuntu-latest
+    if: ${{ github.ref == 'refs/heads/develop'}}
     environment:
       name: test
 
@@ -53,6 +54,7 @@ jobs:
   deploy_to_prod:
     name: Deploy prod matrix server to GKE
     runs-on: ubuntu-latest
+    if: ${{ github.ref == 'refs/heads/main'}}
     environment:
       name: prod
 
