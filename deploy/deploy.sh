@@ -21,6 +21,13 @@ helm upgrade \
     --debug \
     --create-namespace \
     --namespace "${NAMESPACE}" \
+    --set service.homeserverBaseURL="${HOMESERVER_BASE_URL}"\
+    --set service.elementURL="${ELEMENT_BASE_URL}"\
+    --set service.serverName="${SERVER_NAME}"\
+    --set app.container.env.dbHost="${DB_HOST}"\
+    --set app.container.env.dbName="${DB_NAME}"\
+    --set app.container.env.dbPassword="${DB_PASSWORD}"\
+    --set app.container.env.dbUser="${DB_USER}"\
     --set networking.issuer.name="letsencrypt-prod"\
     --set networking.issuer.privateKeySecretRef="letsencrypt-prod"\
     --set networking.synapse.ingress.host="${SYNAPSE_DOMAIN}"\

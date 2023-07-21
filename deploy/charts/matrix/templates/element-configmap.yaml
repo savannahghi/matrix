@@ -15,7 +15,7 @@ data:
         "default_country_code": "GB",
         "default_server_config": {
             "m.homeserver": {
-                "base_url": "https://matrix.test.savannahghi.org",
+                "base_url": {{ .Values.service.homeserverBaseURL }},
                 "server_name": "prohealth360.org"
             },
             "m.identity_server": {
