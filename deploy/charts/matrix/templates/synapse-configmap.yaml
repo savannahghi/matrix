@@ -43,11 +43,11 @@ data:
       args:
         cp_max: 10
         cp_min: 5
-        database: matrix_synapse_testing
-        host: localhost
-        password: mycarehub_django
+        database: {{ .Values.app.container.env.dbName }}
+        host: {{ .Values.app.container.env.dbHost }}
+        password: {{ .Values.app.container.env.dbPassword }}
         port: 5432
-        user: mycarehub_django
+        user: {{ .Values.app.container.env.dbUser }}
       name: psycopg2
       txn_limit: 0
     caches:
@@ -57,7 +57,7 @@ data:
     default_room_version: "10"
     email:
       app_name: Matrix
-      client_base_url: https://element.test.savannahghi.org
+      client_base_url: {{ .Values.service.elementURL }}
       enable_notifs: true
       invite_client_location: https://app.element.io
       notif_for_new_users: true
@@ -120,7 +120,7 @@ data:
     pid_file: /homeserver.pid
     presence:
       enabled: true
-    public_baseurl: https://matrix.test.savannahghi.org/
+    public_baseurl: {{ .Values.service.homeserverBaseURL }}
     push:
       include_content: true
     rc_admin_redaction:
@@ -188,7 +188,7 @@ data:
       sp_config: null
       user_mapping_provider:
         config: null
-    server_name: prohealth360.org
+    server_name: {{ .Values.service.serverName }}
     signing_key_path: /synapse/data/matrix.test.savannahghi.org.signing.key
     spam_checker: []
     sso: null

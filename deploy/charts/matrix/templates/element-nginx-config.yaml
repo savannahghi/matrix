@@ -7,7 +7,7 @@ data:
     server {
         listen       8080;
         listen  [::]:8080;
-        server_name  www.element.test.savannahghi.org element.test.savannahghi.org;
+        server_name  www.{{ .Values.networking.element.ingress.host }} {{ .Values.networking.element.ingress.host }};
 
         root   /usr/share/nginx/html;
         index  index.html;
