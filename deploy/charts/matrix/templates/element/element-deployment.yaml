@@ -3,14 +3,14 @@ kind: Deployment
 metadata:
   name: element
   labels:
-    {{- include "matrix.labels" . | nindent 4 }}
+    app: element
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "matrix.selectorLabels" . | nindent 6 }}
+      app: element
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -20,7 +20,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "matrix.selectorLabels" . | nindent 8 }}
+        app: element
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:

@@ -16,7 +16,7 @@ kind: Ingress
 metadata:
   name: element
   labels:
-    {{- include "matrix.labels" . | nindent 4 }}
+    app: element
   {{- with .Values.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
