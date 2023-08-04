@@ -45,15 +45,8 @@ spec:
           - name: {{ .Values.element.configSecretName }}
             mountPath: {{ .Values.element.configmountpath }}
             subPath: config.json
-
-          - mountPath: /etc/nginx/conf.d
-            name: config-nginx
           
       volumes:
       - name: {{ .Values.element.configSecretName }}
         configMap:
           name: {{ .Values.element.configSecretName }}
-      
-      - name: config-nginx
-        configMap:
-          name: element-nginx-config

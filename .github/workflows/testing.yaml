@@ -23,7 +23,7 @@ jobs:
   deploy_to_testing:
     name: Deploy testing matrix server to GKE
     runs-on: ubuntu-latest
-    if: ${{ github.ref == 'refs/heads/element-labels'}}
+    if: ${{ github.ref == 'refs/heads/switch-element-ingress-class'}}
     environment:
       name: test
 
