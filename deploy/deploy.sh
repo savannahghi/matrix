@@ -21,8 +21,6 @@ helm upgrade \
     --debug \
     --create-namespace \
     --namespace "${NAMESPACE}" \
-    --set service.homeserverBaseURL="${HOMESERVER_BASE_URL}"\
-    --set service.elementURL="${ELEMENT_BASE_URL}"\
     --set service.serverName="${SERVER_NAME}"\
     --set app.container.env.dbHost="${DB_HOST}"\
     --set app.container.env.dbName="${DB_NAME}"\

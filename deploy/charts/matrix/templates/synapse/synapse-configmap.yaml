@@ -40,6 +40,7 @@ data:
     autocreate_auto_join_rooms: true
     background_updates: null
     database:
+      allow_unsafe_locale: true
       args:
         cp_max: 10
         cp_min: 5
@@ -57,7 +58,7 @@ data:
     default_room_version: "10"
     email:
       app_name: Matrix
-      client_base_url: {{ .Values.service.elementURL }}
+      client_base_url: https://{{ .Values.networking.element.ingress.host }}
       enable_notifs: true
       invite_client_location: https://app.element.io
       notif_for_new_users: true
@@ -120,7 +121,7 @@ data:
     pid_file: /homeserver.pid
     presence:
       enabled: true
-    public_baseurl: {{ .Values.service.homeserverBaseURL }}
+    public_baseurl: https://{{ .Values.networking.synapse.ingress.host }}
     push:
       include_content: true
     rc_admin_redaction:
