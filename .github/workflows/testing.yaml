@@ -23,7 +23,7 @@ jobs:
     strategy:
       matrix:
         environment: [test, sil-testing]
-    if: ${{ github.ref == 'refs/heads/develop'}}
+    if: ${{ github.ref == 'refs/heads/purge-nginx'}}
     environment:
       name: ${{ matrix.environment }}
 
