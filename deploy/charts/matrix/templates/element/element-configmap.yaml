@@ -15,7 +15,7 @@ data:
         "default_country_code": "GB",
         "default_server_config": {
             "m.homeserver": {
-                "base_url": https://{{ .Values.networking.synapse.ingress.host }},
+                "base_url": "https://{{ .Values.networking.synapse.ingress.host }}",
                 "server_name": "prohealth360.org"
             },
             "m.identity_server": {
