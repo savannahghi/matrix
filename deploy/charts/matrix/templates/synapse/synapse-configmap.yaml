@@ -77,6 +77,10 @@ data:
     federation_rr_transactions_per_room_per_second: 50
     include_profile_data_on_invite: true
     instance_map: {}
+    jwt_config:
+      enabled: {{ .Values.synapse.jwt.enabled }}
+      secret: {{ .Values.synapse.jwt.secret }}
+      algorithm: {{ .Values.synapse.jwt.algorithm }}
     limit_profile_requests_to_users_who_share_rooms: false
     limit_remote_rooms: null
     listeners:
