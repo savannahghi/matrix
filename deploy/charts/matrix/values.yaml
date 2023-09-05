@@ -43,6 +43,12 @@ synapse:
       timeoutSeconds: 5
       periodSeconds: 10
 
+  # Auth
+  jwt:
+    enabled: false
+    secret: ""
+    algorithm: HS256
+
   # Labels to be appended to all Synapse resources
   labels:
     component: synapse

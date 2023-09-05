@@ -31,6 +31,9 @@ helm upgrade \
     --set networking.synapse.ingress.host="${SYNAPSE_DOMAIN}"\
     --set networking.element.ingress.host="${ELEMENT_DOMAIN}"\
     --set app.container.env.databaseInstanceConnectionName="${DATABASE_INSTANCE_CONNECTION_NAME}"\
+    --set synapse.jwt.enabled="${JWT_ENABLED}" \
+    --set synapse.jwt.secret="${JWT_SECRET}" \
+    --set synapse.jwt.algorithm="${JWT_ALGORITHM}" \
     --wait \
     --timeout 300s \
     -f ./charts/matrix/values.yaml \
