@@ -15,6 +15,9 @@ env:
   DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
   DB_USER: ${{ secrets.DB_USER }}
   SERVER_NAME: ${{ secrets.SERVER_NAME }}
+  JWT_ENABLED: ${{ secrets.JWT_ENABLED }}
+  JWT_SECRET: ${{ secrets.JWT_SECRET }}
+  JWT_ALGORITHM: ${{ secrets.JWT_ALGORITHM }}
 
 jobs:
   deploy_to_testing:
