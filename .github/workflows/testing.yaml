@@ -18,15 +18,18 @@ env:
   JWT_ENABLED: ${{ secrets.JWT_ENABLED }}
   JWT_SECRET: ${{ secrets.JWT_SECRET }}
   JWT_ALGORITHM: ${{ secrets.JWT_ALGORITHM }}
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  AWS_REGION: ${{ secrets.AWS_REGION }}
 
 jobs:
   deploy_to_testing:
-    name: Deploy testing matrix server to GKE
+    name: Deploy testing matrix server to EKS
     runs-on: ubuntu-latest
     strategy:
       matrix:
         environment: [test, sil-testing]
-    if: ${{ github.ref == 'refs/heads/develop'}}
+    # if: ${{ github.ref == 'refs/heads/develop'}}
     environment:
       name: ${{ matrix.environment }}
 
@@ -35,21 +38,20 @@ jobs:
         uses: actions/checkout@v3
 
       - id: "auth"
-        uses: "google-github-actions/auth@v1"
+        uses: "aws-actions/configure-aws-credentials@v1"
         with:
-          credentials_json: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
-          project_id: ${{ secrets.GOOGLE_CLOUD_PROJECT }}
+          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{env.AWS_REGION}}
 
       - name: Install Helm
         run: |
           curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
 
-      - uses: google-github-actions/get-gke-credentials@v1
-        with:
-          cluster_name: ${{ env.CLUSTER_NAME }}
-          location: ${{ env.GKE_ZONE }}
+      - name: Update kube config
+        run: aws eks update-kubeconfig --name $CLUSTER_NAME --region $AWS_REGION
 
-      - name: Deploy to Google Kubernetes engine
+      - name: Deploy to Amazon Kubernetes Service
         shell: bash
         run: cd deploy/ && cat deploy.sh && sh deploy.sh
 
